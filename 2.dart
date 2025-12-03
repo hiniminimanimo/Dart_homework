@@ -34,8 +34,8 @@ void main(){
     double discountd = total * 0.9; // 할인된 가격
     double minusd = total * 0.1;    // 할인 금액
 
-    int discount = discountd.toInt();
-    int minus = minusd.toInt();
+    int discount = discountd.toInt(); //소수점 없애기
+    int minus = minusd.toInt(); //소수점 없애기
 
     print ("❤️총 $minus원 할인❤️");
     print ("💸10% 할인된 가격💸 결제 예상 금액 $discount원");
