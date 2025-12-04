@@ -25,28 +25,35 @@ print("현재 발급한 로또 번호 : $myLotto");
 //———————————————————————————-------------------------------
 
 //1. 로또 번호 6개 뽑기 (중복제거)
-List<int> myLotto(){
+List<int> makeLotto(){
   Set<int> nums = {};
-  while(nums.length < 6);
+  while(nums.length < 6){
   int n = Random().nextInt(45) + 1; // 1~45
   nums.add(n);
+  }
+
+  return nums.toList();
 }
 
 //3. 내 번호와 당첨번호 비교
-int checkSame($myLotto, $winNums){
+int checkSame(List<int>myLotto, List<int>winNums){
 int  count = 0;
 
-for(int n in $myLotto){
-  if($winNums.contain(n)){
+for(int n in myLotto){
+  if(winNums.contains(n)){
     count++;
   }
 }
 
+return count;
+}
+
 //4. 일치한 개수로 등수 판단
 String checkRank(int count){
-if(count >=5) return "1등";
-else if (count == 4) return "2등";
-else if (count == 3) return "3등";
-else return "실패";
+if(count >=5) {return "1등";}
+else if (count == 4) {return "2등";}
+else if (count == 3) {return "3등";}
+else {return "실패";}
 }
-}
+
+
