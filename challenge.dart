@@ -31,20 +31,17 @@ List<int> makeLotto(){
   int n = Random().nextInt(45) + 1; // 1~45
   nums.add(n);
   }
-
   return nums.toList();
 }
 
 //3. 내 번호와 당첨번호 비교
 int checkSame(List<int>myLotto, List<int>winNums){
 int  count = 0;
-
 for(int n in myLotto){
   if(winNums.contains(n)){
     count++;
   }
 }
-
 return count;
 }
 
