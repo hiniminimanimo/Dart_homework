@@ -1,13 +1,6 @@
 import 'dart:io';
 
-// 1단계: Score 클래스만 만들기
-// 2단계: showInfo 제대로 동작하게 하기
-// 3단계: StudentScore 상속만 붙이기
-// 4단계: 파일 없이 리스트로만 테스트
-// 5단계: 그 다음 파일 입출력 천천히 추가
-// 6단계: 마지막에 통합
-
-// 부모 클래스 Score
+//   1) Score (부모 클래스)
 class Score {
   int score;
 
@@ -18,7 +11,7 @@ class Score {
   }
 }
 
-// 자식 클래스 StudentScore
+//   2) StudentScore (자식 클래스)
 class StudentScore extends Score {
   String name;
 
@@ -30,13 +23,13 @@ class StudentScore extends Score {
   }
 }
 
-// 파일 불러오기: "이름,점수" 형식의 txt를 읽어서 리스트로 변환
+//   3) 파일 읽기 loadData()
 List<StudentScore> loadData(String filePath) {
   List<StudentScore> studentList = [];
 
   try {
     final file = File(filePath);
-    final lines = file.readAsLinesSync();
+    final lines = file.readAsLinesSync(); // 파일 전체 줄 읽기
 
     for (var line in lines) {
       // 빈 줄 스킵
@@ -54,17 +47,18 @@ List<StudentScore> loadData(String filePath) {
       String name = parts[0];
       String scoreText = parts[1];
 
+      // 점수 변환 오류
       int? score = int.tryParse(scoreText);
       if (score == null) {
         print('점수 변환 오류 : $line');
         continue;
       }
-
+      // 점수 범위 
       if (score < 0 || score > 100) {
         print('점수 오류 : $line');
         continue;
       }
-
+      // 객체 리스트 추가
       studentList.add(StudentScore(name, score));
     }
   } catch (e) {
@@ -74,7 +68,7 @@ List<StudentScore> loadData(String filePath) {
   return studentList;
 }
 
-// 이름을 입력받아 평균 점수 계산
+//   4) 사용자 입력 → 평균 계산
 String getResult(List<StudentScore> list) {
   while (true) {
     print('어떤 학생의 통계를 확인하시겠습니까?');
@@ -82,6 +76,7 @@ String getResult(List<StudentScore> list) {
 
     String? nameCheck = stdin.readLineSync();
 
+    // 입력 검증
     if (nameCheck == null || nameCheck.trim().isEmpty) {
       print('입력이 잘못되었습니다. 다시 입력해주세요.');
       continue;
@@ -89,6 +84,7 @@ String getResult(List<StudentScore> list) {
 
     String name = nameCheck.trim();
 
+    // 평균 계산
     int sum = 0;
     int eo = 0;
 
@@ -113,7 +109,7 @@ String getResult(List<StudentScore> list) {
   }
 }
 
-// 결과를 result.txt에 저장
+//   5) 결과 파일 저장 saveResult()
 void saveResult(String filePath, String result) {
   try {
     final file = File(filePath);
@@ -123,7 +119,7 @@ void saveResult(String filePath, String result) {
     print('저장에 실패했습니다: $e');
   }
 }
-
+//   6) main()
 void main(List<String> arguments) {
   final student = loadData('./students.txt');
   final result = getResult(student);
