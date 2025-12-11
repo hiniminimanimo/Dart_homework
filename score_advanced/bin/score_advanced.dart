@@ -114,10 +114,10 @@ String getResult(List<StudentScore> list) {
 }
 
 // 결과를 result.txt에 저장
-void saveResult(String filePath, String content) {
+void saveResult(String filePath, String result) {
   try {
     final file = File(filePath);
-    file.writeAsStringSync(content);
+    file.writeAsStringSync(result);
     print('저장이 완료되었습니다.');
   } catch (e) {
     print('저장에 실패했습니다: $e');
@@ -125,7 +125,7 @@ void saveResult(String filePath, String content) {
 }
 
 void main(List<String> arguments) {
-  final student = loadData('student.txt');
+  final student = loadData('./students.txt');
   final result = getResult(student);
-  saveResult('result.txt, resultLine');
+  saveResult('result.txt', result);
 }
