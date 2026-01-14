@@ -1,32 +1,30 @@
-
+//1. 상태 클래스 만들기
 import 'package:book_search/data/model/book.dart';
 import 'package:book_search/data/repository/book_repository.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeViewModel extends ChangeNotifier {
-  final BookRepository _repository = BookRepository();
-  
-  List<Book> _books = [];
-  List<Book> get books => _books;
+class HomeState {
+  List<Book> books;
+  HomeState(this.books);
+}
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
+//2. 뷰모델 만들기 - Notifier 상속
+class HomeViewModel extends Notifier<HomeState> {
+  @override
+  HomeState build() {
+    return HomeState([]);
+  }
 
-  Future<void> searchBooks(String query) async {
-    if (query.trim().isEmpty) return;
-
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      _books = await _repository.getBooks(query);
-    } catch (e) {
-      // 에러가 나면 빈 리스트로 초기화 (나중에 에러 처리도 할 수 있어요)
-      _books = [];
-      print('에러가 났어요: $e');
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+  void searchBooks(String query) async {
+    //
+    final bookRepository = BookRepository();
+    final books = await bookRepository.searchBooks(query);
+    state = HomeState(books);
   }
 }
+
+//3. 뷰모델 관리자 만들기 - NotifierProvider 객체
+//Provider : 상태 관리자, 공급자
+final homeViewModelProvider = NotifierProvider<HomeViewModel, HomeState>(() {
+  return HomeViewModel();
+});

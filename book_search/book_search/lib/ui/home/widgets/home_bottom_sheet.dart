@@ -1,7 +1,12 @@
+import 'package:book_search/data/model/book.dart';
 import 'package:book_search/ui/detail/detail_page.dart';
 import 'package:flutter/material.dart';
 
 class HomeBottomSheet extends StatelessWidget {
+  HomeBottomSheet(this.book);
+
+  Book book;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -10,23 +15,29 @@ class HomeBottomSheet extends StatelessWidget {
       padding: EdgeInsets.only(top: 20, bottom: 50, left: 20, right: 20),
       child: Row(
         children: [
-          Image.network('https://picsum.photos/200/300', fit: BoxFit.cover),
+          Image.network(book.image, fit: BoxFit.cover),
           SizedBox(width: 20),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '해리포터와 마법사의 돌',
+                  book.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  'J.K. 롤링',
+                  book.author,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 10),
                 Text(
-                  '해리포터와 마법사의 돌을 찾아가는 여정',
+                  book.description,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 14, height: 1.2),
                 ),
                 Spacer(),
@@ -36,7 +47,7 @@ class HomeBottomSheet extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          return DetailPage();
+                          return DetailPage(book);
                         },
                       ),
                     );

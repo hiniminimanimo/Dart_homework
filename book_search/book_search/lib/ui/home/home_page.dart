@@ -1,14 +1,16 @@
+import 'package:book_search/ui/home/home_view_model.dart';
 import 'package:book_search/ui/home/widgets/home_bottom_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
   final TextEditingController _textController = TextEditingController();
   bool _isFocused = false; // 포커스 상태를 기억할 변수
 
@@ -18,8 +20,18 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  void onSearch(String text) {
+    // 뷰모델의 searchBooks 메서드 호출
+    ref.read(homeViewModelProvider.notifier).searchBooks(text);
+    print('onSearch 호출됨: $text');
+  }
+
   @override
   Widget build(BuildContext context) {
+    // 상태 구독 (값이 변하면 리빌드)
+    final homeState = ref.watch(homeViewModelProvider);
+    final books = homeState.books;
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -43,9 +55,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: TextField(
                     controller: _textController,
-                    onSubmitted: (value) {
-                      print('검색어(엔터): $value');
-                    },
+                    onSubmitted: onSearch, // 엔터 입력 시 검색
                     decoration: const InputDecoration(
                       hintText: '검색어를 입력하세요',
                       // 힌트 텍스트 색상 변경
@@ -66,8 +76,7 @@ class _HomePageState extends State<HomePage> {
               child: IconButton(
                 icon: const Icon(Icons.search),
                 onPressed: () {
-                  // TODO: 검색 기능 구현
-                  print('검색어(버튼): ${_textController.text}');
+                  onSearch(_textController.text); // 버튼 클릭 시 검색
                 },
               ),
             ),
@@ -82,18 +91,25 @@ class _HomePageState extends State<HomePage> {
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
-        itemCount: 10, // 임시로 10개만 보여주기
+        itemCount: books.length, // 데이터 개수만큼 표시
         itemBuilder: (context, index) {
+          final book = books[index];
           return GestureDetector(
             onTap: () {
               showModalBottomSheet(
                 context: context,
                 builder: (context) {
-                  return HomeBottomSheet();
+                  return HomeBottomSheet(book);
                 },
               );
             },
-            child: Image.network('https://picsum.photos/200/300'),
+            child: Image.network(
+              book.image,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return const Center(child: Icon(Icons.error));
+              },
+            ),
           );
         },
       ),
