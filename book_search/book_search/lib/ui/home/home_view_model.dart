@@ -1,0 +1,30 @@
+//1. 상태 클래스 만들기
+import 'package:book_search/data/model/book.dart';
+import 'package:book_search/data/repository/book_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class HomeState {
+  List<Book> books;
+  HomeState(this.books);
+}
+
+//2. 뷰모델 만들기 - Notifier 상속
+class HomeViewModel extends Notifier<HomeState> {
+  @override
+  HomeState build() {
+    return HomeState([]);
+  }
+
+  void searchBooks(String query) async {
+    //
+    final bookRepository = BookRepository();
+    final books = await bookRepository.searchBooks(query);
+    state = HomeState(books);
+  }
+}
+
+//3. 뷰모델 관리자 만들기 - NotifierProvider 객체
+//Provider : 상태 관리자, 공급자
+final homeViewModelProvider = NotifierProvider<HomeViewModel, HomeState>(() {
+  return HomeViewModel();
+});

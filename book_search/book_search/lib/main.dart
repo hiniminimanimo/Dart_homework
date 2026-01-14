@@ -1,8 +1,10 @@
+import 'package:book_search/ui/detail/detail_page.dart';
 import 'package:book_search/ui/home/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -13,6 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(),
+      //home: DetailPage(),
       home: const HomePage(),
     );
   }
